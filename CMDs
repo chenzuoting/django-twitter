@@ -1,0 +1,16 @@
+Terminal 1 (Local):
+cd /Users/mcfy/Projects/djangoWork/Twitter/django-twitter
+vagrant up
+
+Terminal 2 (VM):
+cd /Users/mcfy/Projects/djangoWork/Twitter/django-twitter
+vagrant ssh
+cd /vagrant/
+python manage.py runserver 0.0.0.0:8000 (Can run on pycharm as well)
+
+Git:
+git status
+git checkout -b <branch name>
+git add .
+git commit -m "..."
+git push -u origin <branch name>
