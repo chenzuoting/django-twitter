@@ -19,3 +19,4 @@ Test:
 testing
 testing@testing.com
 testing
+Test CMD: In VM: python manage.py test
