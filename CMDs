@@ -14,6 +14,8 @@ git checkout -b <branch name>
 git add .
 git commit -m "..."
 git push -u origin <branch name>
+git checkout main
+git pull
 
 Test:
 testing
