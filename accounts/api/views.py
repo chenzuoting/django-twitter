@@ -16,8 +16,11 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
+    # Define where to get the data
     queryset = User.objects.all().order_by('-date_joined')
+    # Serializer: define how to convert data to json and return
     serializer_class = UserSerializer
+    # Define whether a user has permission to perform this action
     permission_classes = (permissions.IsAuthenticated,)
 
 class AccountViewSet(viewsets.ViewSet):
