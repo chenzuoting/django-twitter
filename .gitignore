@@ -2,6 +2,9 @@
 .vagrant
 Vagrantfile
 
+.DS_Store
+.pycharm_helpers/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
