@@ -10,6 +10,7 @@ LOGIN_STATUS_URL = '/api/accounts/login_status/'
 class AccountApiTests(TestCase):
     def setUp(self):
         # This function will call at the beginning of every test function
+        # Below steps wrong effect real database, test database is used
         self.client = APIClient()
         self.user = self.createUser(
             username='admin',
@@ -24,7 +25,7 @@ class AccountApiTests(TestCase):
 
     def test_login(self):
         # Every function need to start with test_* , so that it can be called for testing
-        # Test need to use post not get
+        # Test need to use POST not GET
         response = self.client.get(LOGIN_URL, {
             'username': self.user.username,
             'password': 'correct password',
@@ -67,11 +68,11 @@ class AccountApiTests(TestCase):
         response = self.client.get(LOGIN_STATUS_URL)
         self.assertEqual(response.data['has_logged_in'], True)
 
-        # Check using post not get
+        # Check using GET, expect error
         response = self.client.get(LOGOUT_URL)
         self.assertEqual(response.status_code, 405)
 
-        # User post and logged out successfully
+        # Use POST and logged out successfully
         response = self.client.post(LOGOUT_URL)
         self.assertEqual(response.status_code, 200)
 
@@ -85,7 +86,7 @@ class AccountApiTests(TestCase):
             'email': 'someone@testing.com',
             'password': 'any password',
         }
-        # Check request failed on get
+        # Check request failed on GET
         response = self.client.get(SIGNUP_URL, data)
         self.assertEqual(response.status_code, 405)
 

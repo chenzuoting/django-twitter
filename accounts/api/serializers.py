@@ -6,20 +6,23 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'email')
 
+
 class SignupSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=20, min_length=6)
     password = serializers.CharField(max_length=20, min_length=6)
     email = serializers.EmailField()
 
     class Meta:
+        # Define the model and field for serializer.save()
         model = User
         fields = ('username', 'email', 'password')
 
+    # Will be called when is_valid() si called
     def validate(self, data):
         # TODO<HOMEWORK> Adding check that username contains required set of characters
         if User.objects.filter(username=data['username'].lower()).exists():
             raise exceptions.ValidationError({
-                'message': 'This email address has been occupied.'
+                'message': 'This username has been occupied.'
             })
         if User.objects.filter(email=data['email'].lower()).exists():
             raise exceptions.ValidationError({
@@ -31,6 +34,8 @@ class SignupSerializer(serializers.ModelSerializer):
         username = validated_data['username'].lower()
         email = validated_data['email'].lower()
         password = validated_data['password']
+        # Use create_user() instead of create()
+        # because create_user() contains set_password() to encrypt password
         user = User.objects.create_user(
             username=username,
             email=email,
@@ -38,6 +43,8 @@ class SignupSerializer(serializers.ModelSerializer):
         )
         return user
 
+
 class LoginSerializer(serializers.Serializer):
+    # Set checking rules for username and password field
     username = serializers.CharField()
     password = serializers.CharField()
