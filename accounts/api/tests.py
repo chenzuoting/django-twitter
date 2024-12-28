@@ -105,7 +105,8 @@ class AccountApiTests(TestCase):
             'email': 'someone@testing.com',
             'password': '123',
         })
-        # print(response.data)
+        # print(response.content) print data before parse
+        # print(response.data) print data after parse
         self.assertEqual(response.status_code, 400)
 
         # Check password is too long
