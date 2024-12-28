@@ -103,7 +103,10 @@ class AccountViewSet(viewsets.ViewSet):
         """
         Check current user login status
         """
-        data = {'has_logged_in': request.user.is_authenticated}
+        data = {
+            'has_logged_in': request.user.is_authenticated,
+            'ip' : request.META['REMOTE_ADDR']
+        }
         if request.user.is_authenticated:
             # Add a new hash called 'user', and use serializer to render data
             data['user'] = UserSerializer(request.user).data
