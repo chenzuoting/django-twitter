@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     # project apps
     'accounts',
+    'tweets',
 ]
 
 REST_FRAMEWORK = {
@@ -95,6 +96,24 @@ DATABASES = {
         'PASSWORD': 'yourpassword', # 这里是自己下载mysql时候输入两次的那个密码
     }
 }
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'handlers': ['console'],
+#             'propagate': True,
+#             'level': 'DEBUG',
+#         },
+#     }
+# }
 
 
 # Password validation
