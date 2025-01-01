@@ -16,6 +16,11 @@ class Tweet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     #updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        # Add composite index
+        index_together = (('user', 'created_at'),)
+        ordering = ('user', '-created_at')
+
     @property
     def hours_to_now(self):
         # datetime.now do not have timezone info, so use utc_now() to replace to UTC

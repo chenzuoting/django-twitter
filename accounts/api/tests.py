@@ -1,4 +1,4 @@
-from django.test import TestCase
+from testing.testcases import TestCase
 from rest_framework.test import APIClient
 from django.contrib.auth.models import User
 
@@ -12,16 +12,11 @@ class AccountApiTests(TestCase):
         # This function will call at the beginning of every test function
         # Below steps wrong effect real database, test database is used
         self.client = APIClient()
-        self.user = self.createUser(
+        self.user = self.create_user(
             username='admin',
-            email='admin@testing.com',
+            email='admin@twitter.com',
             password='correct password',
         )
-
-    def createUser(self, username, email, password):
-        # Can not do User.objects.create()
-        # Because password need to encrypted, username and email need normalize process
-        return User.objects.create_user(username, email, password)
 
     def test_login(self):
         # Every function need to start with test_* , so that it can be called for testing
@@ -51,7 +46,7 @@ class AccountApiTests(TestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertNotEqual(response.data['user'], None)
-        self.assertEqual(response.data['user']['email'], 'admin@testing.com')
+        self.assertEqual(response.data['user']['email'], 'admin@twitter.com')
 
         # Check logged in successfully
         response = self.client.get(LOGIN_STATUS_URL)
