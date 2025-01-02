@@ -25,10 +25,10 @@ class AccountApiTests(TestCase):
             'username': self.user.username,
             'password': 'correct password',
         })
-        # Login failed，http status code return 405 = METHOD_NOT_ALLOWED
+        # Error: Login failed，http status code return 405 = METHOD_NOT_ALLOWED
         self.assertEqual(response.status_code, 405)
 
-        # Used post, but wrong password
+        # Error: Used post, but wrong password
         response = self.client.post(LOGIN_URL, {
             'username': self.user.username,
             'password': 'wrong password',
@@ -39,7 +39,7 @@ class AccountApiTests(TestCase):
         response = self.client.get(LOGIN_STATUS_URL)
         self.assertEqual(response.data['has_logged_in'], False)
 
-        # Use correct password
+        # Success: Use correct password
         response = self.client.post(LOGIN_URL, {
             'username': self.user.username,
             'password': 'correct password',
@@ -63,11 +63,11 @@ class AccountApiTests(TestCase):
         response = self.client.get(LOGIN_STATUS_URL)
         self.assertEqual(response.data['has_logged_in'], True)
 
-        # Check using GET, expect error
+        # Error: Check using GET, expect error
         response = self.client.get(LOGOUT_URL)
         self.assertEqual(response.status_code, 405)
 
-        # Use POST and logged out successfully
+        # Success: Use POST and logged out successfully
         response = self.client.post(LOGOUT_URL)
         self.assertEqual(response.status_code, 200)
 
@@ -81,11 +81,11 @@ class AccountApiTests(TestCase):
             'email': 'someone@testing.com',
             'password': 'any password',
         }
-        # Check request failed on GET
+        # Error: Check request failed on GET
         response = self.client.get(SIGNUP_URL, data)
         self.assertEqual(response.status_code, 405)
 
-        # Check email is valid
+        # Error: Check email is valid
         response = self.client.post(SIGNUP_URL, {
             'username': 'someone',
             'email': 'not a correct email',
@@ -94,7 +94,7 @@ class AccountApiTests(TestCase):
         # print(response.data)
         self.assertEqual(response.status_code, 400)
 
-        # Check password is too short
+        # Error: Check password is too short
         response = self.client.post(SIGNUP_URL, {
             'username': 'someone',
             'email': 'someone@testing.com',
@@ -104,7 +104,7 @@ class AccountApiTests(TestCase):
         # print(response.data) print data after parse
         self.assertEqual(response.status_code, 400)
 
-        # Check password is too long
+        # Error: Check password is too long
         response = self.client.post(SIGNUP_URL, {
             'username': 'username is tooooooooooooooooo loooooooong',
             'email': 'someone@testing.com',
@@ -113,7 +113,7 @@ class AccountApiTests(TestCase):
         # print(response.data)
         self.assertEqual(response.status_code, 400)
 
-        # Signup successfully
+        # Success: Signup successfully
         response = self.client.post(SIGNUP_URL, data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data['user']['username'], 'someone')
