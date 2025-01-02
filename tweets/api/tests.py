@@ -29,11 +29,11 @@ class TweetApiTests(TestCase):
         ]
 
     def test_list_api(self):
-        # Need to pass user_id
+        # Error: Need to pass user_id
         response = self.anonymous_client.get(TWEET_LIST_API)
         self.assertEqual(response.status_code, 400)
 
-        # Correct request
+        # Success: Correct request
         response = self.anonymous_client.get(TWEET_LIST_API, {'user_id': self.user1.id})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['tweets']), 3)
@@ -44,23 +44,23 @@ class TweetApiTests(TestCase):
         self.assertEqual(response.data['tweets'][1]['id'], self.tweets2[0].id)
 
     def test_create_api(self):
-        # Need to logged in
+        # Error: Need to logged in
         response = self.anonymous_client.post(TWEET_CREATE_API)
         self.assertEqual(response.status_code, 403)
 
-        # Need to have content
+        # Error: Need to have content
         response = self.user1_client.post(TWEET_CREATE_API)
         self.assertEqual(response.status_code, 400)
-        # content too short
+        # Error: Content too short
         response = self.user1_client.post(TWEET_CREATE_API, {'content': '1'})
         self.assertEqual(response.status_code, 400)
-        # content too long
+        # Error: Content too long
         response = self.user1_client.post(TWEET_CREATE_API, {
             'content': '0' * 141
         })
         self.assertEqual(response.status_code, 400)
 
-        # Created tweet successfully
+        # Success: Created tweet successfully
         tweets_count = Tweet.objects.count()
         response = self.user1_client.post(TWEET_CREATE_API, {
             'content': 'Hello World, this is my first tweet!'
