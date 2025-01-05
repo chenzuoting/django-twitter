@@ -4,7 +4,7 @@ from tweets.models import Tweet
 
 
 class TweetSerializer(serializers.ModelSerializer):
-    # Need to declare user here, otherwise return an int type
+    # Need to declare user serializer here to show full user info, otherwise return an int type id
     # Other fields is taken care of by ModelSerializer
     user = UserSerializerForTweet()
 
