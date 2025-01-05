@@ -5,7 +5,8 @@ from tweets.api.serializers import TweetSerializer, TweetCreateSerializer
 from tweets.models import Tweet
 from newsfeeds.services import NewsFeedService
 
-# Avoid using ModelViewSet, use other viewset to limit user action
+# Avoid using ModelViewSet, ModelViewSet allows all actions: Create, Read, Update, Delete
+# Use other viewset to limit user action
 # No need for CreateModelMixin and ListModelMixin, we need to implement them ourselves
 class TweetViewSet(viewsets.GenericViewSet,
                    viewsets.mixins.CreateModelMixin,
@@ -13,8 +14,17 @@ class TweetViewSet(viewsets.GenericViewSet,
     """
     API endpoint that allows users to create, list tweets
     """
+    # queryset: used by self.get_object(), as Tweet.objects.all().get(id=?)
     queryset = Tweet.objects.all()
     serializer_class = TweetCreateSerializer
+
+    # Pre-defined functions
+    # POST /api/tweets/ -> create()
+    # GET /api/tweets/ -> list()
+    # GET /api/tweets/1/ -> retrieve()
+    # DELETE /api/tweets/1/ -> destroy()
+    # PATCH /api/tweets/1/ -> partial_update()
+    # DELETE /api/tweets/1/ -> update()
 
     def get_permissions(self):
         # self.action is 'list' or 'create' functions below that has request

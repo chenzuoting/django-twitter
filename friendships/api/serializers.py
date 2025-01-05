@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 # source='from_user' equals friendships.from_user
 # https://www.django-rest-framework.org/api-guide/serializers/#specifying-fields-explicitly
 class FollowerSerializer(serializers.ModelSerializer):
+    # Need to declare user serializer here to show full user info, otherwise return an int type id
     user = UserSerializerForFriendship(source='from_user')
     created_at = serializers.DateTimeField()
 
