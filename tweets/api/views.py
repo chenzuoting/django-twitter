@@ -24,7 +24,7 @@ class TweetViewSet(viewsets.GenericViewSet,
     # GET /api/tweets/1/ -> retrieve()
     # DELETE /api/tweets/1/ -> destroy()
     # PATCH /api/tweets/1/ -> partial_update()
-    # DELETE /api/tweets/1/ -> update()
+    # PUT /api/tweets/1/ -> update()
 
     def get_permissions(self):
         # self.action is 'list' or 'create' functions below that has request
