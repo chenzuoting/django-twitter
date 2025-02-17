@@ -16,6 +16,7 @@ class CommentViewSet(viewsets.GenericViewSet):
     # Not support retrieve
     serializer_class = CommentSerializerForCreate
     queryset = Comment.objects.all()
+    filterset_fields = ('tweet_id',)
 
     # Pre-defined functions
     # POST /api/comments/ -> create()
@@ -33,6 +34,34 @@ class CommentViewSet(viewsets.GenericViewSet):
         if self.action in ['destroy', 'update']:
             return [IsAuthenticated(), IsObjectOwner()]
         return [AllowAny()]
+
+    def list(self, request, *args, **kwargs):
+        # Expecting GET /api/comments/?tweet_id=1
+        if 'tweet_id' not in request.query_params:
+            return Response(
+                {
+                    'message': 'missing tweet_id in request',
+                    'success': False,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        # Also works
+        # tweet_id = request.query_params['tweet_id']
+        # Comment.objects.filter(tweet_id=tweet_id)
+
+        # More advanced, using django_filters
+        queryset = self.get_queryset()
+        # Call filter_backends, which is defined in filterset_fields
+        # comments = self.filter_queryset(queryset).order_by('created_at')
+        # Use prefetch_related to reduce auth_user request in DB
+        comments = self.filter_queryset(queryset)\
+            .prefetch_related('user')\
+            .order_by('created_at')
+        serializer = CommentSerializer(comments, many=True)
+        return Response(
+            {'comments': serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
     def create(self, request, *args, **kwargs):
         # Another way to pass info to serializer: create a dict
