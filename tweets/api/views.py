@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from tweets.api.serializers import (
     TweetSerializer,
     TweetSerializerForCreate,
-    TweetSerializerWithComments,
+    TweetSerializerForDetail,
 )
 from tweets.models import Tweet
 from newsfeeds.services import NewsFeedService
@@ -41,7 +41,11 @@ class TweetViewSet(viewsets.GenericViewSet,
         # <HOMEWORK 1> Use query argument with_all_comments to decide whether include comments
         # <HOMEWORK 2> Use query argument with_preview_comments to decide whether include first 3 comments
         tweet = self.get_object()
-        return Response(TweetSerializerWithComments(tweet).data)
+        serializer = TweetSerializerForDetail(
+            tweet,
+            context={'request': request},
+        )
+        return Response(serializer.data)
 
     @required_params(params=['user_id'])
     def list(self, request, *args, **kwargs):
@@ -63,7 +67,11 @@ class TweetViewSet(viewsets.GenericViewSet,
         ).order_by('-created_at')
 
         # many=True returns list of dict, each dict is one TweetSerializer
-        serializer = TweetSerializer(tweets, many=True)
+        serializer = TweetSerializer(
+            tweets,
+            context={'request': request},
+            many=True
+        )
 
         # Response is using hash by default
         return Response({'tweets': serializer.data})
@@ -85,4 +93,7 @@ class TweetViewSet(viewsets.GenericViewSet,
             }, status=400)
         tweet = serializer.save()
         NewsFeedService.fanout_to_followers(tweet)
-        return Response(TweetSerializer(tweet).data, status=201)
+        return Response(
+            TweetSerializer(tweet, context={'request': request}).data,
+            status=201
+        )
