@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase as DjangoTestCase
 from likes.models import Like
+from newsfeeds.models import NewsFeed
 from tweets.models import Tweet
 from rest_framework.test import APIClient
 
@@ -31,6 +32,9 @@ class TestCase(DjangoTestCase):
         if content is None:
             content = 'Default tweet testing content'
         return Tweet.objects.create(user=user, content=content)
+
+    def create_newsfeed(self, user, tweet):
+        return NewsFeed.objects.create(user=user, tweet=tweet)
 
     def create_comment(self, user, tweet, content=None):
         if content is None:
